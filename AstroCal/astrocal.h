@@ -1,0 +1,1 @@
+int astro0();
