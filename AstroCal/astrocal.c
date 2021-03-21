@@ -1,6 +1,12 @@
 #include "astrocal.h"
 
 struct timespec ASTC_currentTimeUTC() {
+    /*! Provide current time in UTC as \ref struct timespec 
+
+      The timespec ts contains a long value for seconds ts.tv_sec and 
+      a long value for nanoseconds ts.tv_nsec.
+
+     @return \ref struct timespec */
     struct timespec ts;
     timespec_get(&ts, TIME_UTC);
     return ts;
@@ -15,7 +21,7 @@ void ASTC_printTime(const struct timespec ts) {
 void ASTC_printLocalTime(const struct timespec ts) {
     char buf[100];
     strftime(buf, sizeof(buf), "%Y-%m-%d %T", localtime(&ts.tv_sec));
-    printf("Current time: %s.%09ld\n", buf, ts.tv_nsec);
+    printf("Current time: %s.%09ld (local)\n", buf, ts.tv_nsec);
 }
 
 double ASTC_timespecToDouble(const struct timespec ts) {
