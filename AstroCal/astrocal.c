@@ -46,3 +46,48 @@ struct timespec ASTC_JDToTimespec(double jd) {
     double dts=(jd-2440587.5)*86400.0;
     return ASTC_doubleToTimespec(dts);
 }
+
+double ASTC_degreeToDecimal(int d, int m, double s) {
+    double sgn=1.0;
+    if (d<0 || m<0 || s<0.0) sgn=-1.0;
+    if (d<0) d= -d;
+    if (m<0) m= -m;
+    if (s<0) s=fabs(s);
+    if (m>=60) {
+        printf("Internal error in ASTC_degreeToDecimal: m>=60 -> %d!\n", m);
+    }
+    if (s>=60.0) {
+        printf("Internal error in ASTC_degreeToDecimal: s>=60.0 -> %f!\n", s);
+    }
+    return sgn*(fabs((double)d)+fabs((double)m/60.0)+fabs(s)/3600.0);
+}
+
+void ASTC_decimalToDegree(double de, int *d, int *m, double *s) {
+    double ade=fabs(de);
+    if (d) *d=(int)ade;
+    ade -= (int)ade;
+    ade *= 60.0;
+    if (m) *m=(int)(ade);
+    ade -= (int)ade;
+    ade *= 60.0;
+    if (s) *s=ade;
+    if (de<0.0) {
+        if (d) {
+            if (*d != 0) {
+                *d = -*d;
+                return;
+            }
+            if (m) {
+                if (*m != 0) {
+                    *m = -*m;
+                    return;
+                }
+            }
+            if (s) {
+                if (*s != 0.0) {
+                    *s = -*s;
+                }
+            }
+        }
+    }           
+}

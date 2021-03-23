@@ -1,4 +1,5 @@
 #include <time.h>
+#include <math.h>
 #include <stdio.h>
 
 struct timespec ASTC_currentTimeUTC();
@@ -8,3 +9,5 @@ double ASTC_timespecToDouble(const struct timespec ts);
 struct timespec ASTC_doubleToTimespec(double dts);
 double ASTC_timespecToJD(const struct timespec ts);
 struct timespec ASTC_JDToTimespec(double jd);
+double ASTC_degreeToDecimal(int d, int m, double s);
+void ASTC_decimalToDegree(double de, int *d, int *m, double *s);

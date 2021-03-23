@@ -10,5 +10,4 @@ Then symlink, in project root execute:
 
 ```bash
 ln -s ~/git/CScratch/astrocal/build/Debug/compile_commands.json .
-
 ```
