@@ -6,7 +6,7 @@ struct timespec ASTC_currentTimeUTC() {
       The timespec ts contains a long value for seconds ts.tv_sec and 
       a long value for nanoseconds ts.tv_nsec.
 
-     @return \ref struct timespec */
+     @return \ref timespec */
     struct timespec ts;
     timespec_get(&ts, TIME_UTC);
     return ts;
