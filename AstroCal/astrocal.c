@@ -13,12 +13,18 @@ struct timespec ASTC_currentTimeUTC() {
 }
 
 void ASTC_printTime(const struct timespec ts) {
+    /*! Print a timespec to console as UTC time
+      @param ts \ref timespec
+    */
     char buf[100];
     strftime(buf, sizeof(buf), "%Y-%m-%d %T", gmtime(&ts.tv_sec));
     printf("Current time: %s.%09ld UTC\n", buf, ts.tv_nsec);
 }
 
 void ASTC_printLocalTime(const struct timespec ts) {
+    /*! Print a timespec to console as local time
+      @param ts \ref timespec
+    */
     char buf[100];
     strftime(buf, sizeof(buf), "%Y-%m-%d %T", localtime(&ts.tv_sec));
     printf("Current time: %s.%09ld (local)\n", buf, ts.tv_nsec);
@@ -37,12 +43,21 @@ struct timespec ASTC_doubleToTimespec(double dts) {
 }
 
 double ASTC_timespecToJD(const struct timespec ts) {
-    // Unix time = (JD − 2440587.5) × 86400 
+    /*! Convert a timespec to Julian date
+      Unix time = (JD − 2440587.5) × 86400
+      @param ts \ref timespec
+      @return julian date as double.
+    */
     double dts=ASTC_timespecToDouble(ts);
     return dts/86400.0+2440587.5;
 }
 
 struct timespec ASTC_JDToTimespec(double jd) {
+    /*! Convert a Julian date to timespec
+      Unix time = (JD − 2440587.5) × 86400
+      @param jd julian date
+      @return \ref timespec
+    */
     double dts=(jd-2440587.5)*86400.0;
     return ASTC_doubleToTimespec(dts);
 }
@@ -90,4 +105,50 @@ void ASTC_decimalToDegree(double de, int *d, int *m, double *s) {
             }
         }
     }           
+}
+
+const double π = 3.14159265358979323846;
+
+void ASTC_cartesianToPolar(double x, double y, double z, double *r, double *ϑ, double *φ) {
+    if (r) *r=sqrt(x*x+y*y+z*z);
+    if (ϑ) *ϑ=atan2(z,sqrt(x*x+y*y));
+    if (φ) *ϑ=atan2(y,x);
+}
+
+void ASTC_polarToCartesian(double r, double ϑ, double φ, double *x, double *y, double *z) {
+    if (x) *x=r*cos(ϑ)*cos(φ);
+    if (y) *y=r*cos(ϑ)*sin(φ);
+    if (z) *z=r*sin(ϑ);
+    }
+
+void ASTC_C2P(const double x[], double r[]) {
+    ASTC_cartesianToPolar(x[0],x[1],x[2],&(r[0]),&(r[1]),&(r[2]));
+}
+
+void ASTC_P2C(const double r[], double x[]) {
+    ASTC_cartesianToPolar(r[0], r[1], r[2], &(x[0]), &(x[1]), &(x[2]));
+}
+
+void ASTC_D2R(double d[], int len) {
+    for (int i=0; i<len; i++) {
+        d[i]=d[i]*π/180.0;
+    }
+}
+
+void ASTC_R2D(double r[], int len) {
+    for (int i=0; i<len; i++) {
+        r[i]=r[i]*180.0/π;
+    }
+}
+
+void ASTC_P2D(double p[]) {
+    for (int i=1; i<3; i++) {
+        p[i]=p[i]*180.0/π;
+    }
+}
+
+void ASTC_D2P(double d[]) {
+    for (int i=1; i<3; i++) {
+        d[i]=d[i]/180.0*π;
+    }
 }
