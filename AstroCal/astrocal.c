@@ -1,3 +1,7 @@
+/*! AstroCal routines
+  \file astrocal.c a lib
+  \brief That is the AstroCal library
+ */
 #include "astrocal.h"
 
 struct timespec ASTC_currentTimeUTC() {
@@ -109,24 +113,41 @@ void ASTC_decimalToDegree(double de, int *d, int *m, double *s) {
 
 const double π = 3.14159265358979323846;
 
-void ASTC_cartesianToPolar(double x, double y, double z, double *r, double *ϑ, double *φ) {
+/*           z
+             |
+             |      o P
+             |  r / |
+             |   /  |
+             | / θ  |
+             +——————————————————y
+            / \     |      .
+          /.ϕ...\   |    .
+        /        \  |  . 
+      /............\|.
+     x
+     Azimuth   ϕ is angle from x towards y (counter-clockwise) in x-y plane, 
+     Elevation θ is angle from x-y plane towards z-axis
+     Radius    r is distance from P to origin.
+ */
+
+void ASTC_cartesianToSpherical(double x, double y, double z, double *r, double *ϑ, double *φ) {
     if (r) *r=sqrt(x*x+y*y+z*z);
     if (ϑ) *ϑ=atan2(z,sqrt(x*x+y*y));
     if (φ) *φ=atan2(y,x);
 }
 
-void ASTC_polarToCartesian(double r, double ϑ, double φ, double *x, double *y, double *z) {
+void ASTC_sphericalToCartesian(double r, double ϑ, double φ, double *x, double *y, double *z) {
     if (x) *x=r*cos(ϑ)*cos(φ);
     if (y) *y=r*cos(ϑ)*sin(φ);
     if (z) *z=r*sin(ϑ);
     }
 
 void ASTC_C2P(const double x[], double r[]) {
-    ASTC_cartesianToPolar(x[0],x[1],x[2],&(r[0]),&(r[1]),&(r[2]));
+    ASTC_cartesianToSpherical(x[0],x[1],x[2],&(r[0]),&(r[1]),&(r[2]));
 }
 
 void ASTC_P2C(const double r[], double x[]) {
-    ASTC_cartesianToPolar(r[0], r[1], r[2], &(x[0]), &(x[1]), &(x[2]));
+    ASTC_cartesianToSpherical(r[0], r[1], r[2], &(x[0]), &(x[1]), &(x[2]));
 }
 
 void ASTC_D2R(double d[], int len) {
@@ -142,12 +163,14 @@ void ASTC_R2D(double r[], int len) {
 }
 
 void ASTC_P2D(double p[]) {
+    // p[0]=r, p[1]=ϕ, p[2]=θ
     for (int i=1; i<3; i++) {
         p[i]=p[i]*180.0/π;
     }
 }
 
 void ASTC_D2P(double d[]) {
+    // d[0]=r, d[1]=ϕ, d[2]=θ
     for (int i=1; i<3; i++) {
         d[i]=d[i]/180.0*π;
     }
