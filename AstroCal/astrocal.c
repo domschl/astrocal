@@ -112,7 +112,7 @@ const double π = 3.14159265358979323846;
 void ASTC_cartesianToPolar(double x, double y, double z, double *r, double *ϑ, double *φ) {
     if (r) *r=sqrt(x*x+y*y+z*z);
     if (ϑ) *ϑ=atan2(z,sqrt(x*x+y*y));
-    if (φ) *ϑ=atan2(y,x);
+    if (φ) *φ=atan2(y,x);
 }
 
 void ASTC_polarToCartesian(double r, double ϑ, double φ, double *x, double *y, double *z) {
