@@ -66,6 +66,52 @@ struct timespec ASTC_JDToTimespec(double jd) {
     return ASTC_doubleToTimespec(dts);
 }
 
+double ASTC_JDToMSDprec(double jd, double k) {
+    /*! Convert a Julian date to Mars Sol Date (MSD)
+      See: https://en.wikipedia.org/wiki/Timekeeping_on_Mars
+      See also \ref ASTC_JDToMSD() for a version with default value for k.
+      @param jd julian date
+      @param k correction factor in MSDs of location of reference crater Airy-0, currently 0.00014d
+      (12sec).
+      @return MSD, Mars Sol Date
+    */
+    double msd=(jd - 2451549.5 + k)/1.02749125 + 44796.0;
+    return msd;
+}
+
+double ASTC_MSDToJDprec(double msd, double k) {
+    /*! Convert a Mars Sol Date (MSD) to Julian date
+      See: https://en.wikipedia.org/wiki/Timekeeping_on_Mars
+      See also \ref ASTC_MSDToJD() for a version with default value for k.
+      @param msd Mars Sol Date (MSD)
+      @param k correction factor in MSDs of location of reference crater Airy-0, currently 0.00014d
+      (12sec).
+      @return JD, Julian date.
+    */
+    double jd=(msd-44796.0)*1.02749125-k+2451549.5;
+    return jd;
+}
+
+double ASTC_JDToMSD(double jd) {
+    /*! Convert a Julian date to Mars Sol Date (MSD)
+      See: https://en.wikipedia.org/wiki/Timekeeping_on_Mars
+      See also \ref ASTC_JDToMSDprec().
+      @param jd julian date
+      @return MSD, Mars Sol Date
+    */
+    return ASTC_JDToMSDprec(jd, 0.00014);
+}
+
+double ASTC_MSDToJD(double msd) {
+    /*! Convert a Mars Sol Date (MSD) to Julian date
+      See: https://en.wikipedia.org/wiki/Timekeeping_on_Mars
+      See also \ref ASTC_MSDToJDprec().
+      @param msd MSD, Mars Sol Date
+      @return julian date
+    */
+    return ASTC_MSDToJDprec(msd, 0.00014);
+}
+
 double ASTC_degreeToDecimal(int d, int m, double s) {
     double sgn=1.0;
     if (d<0 || m<0 || s<0.0) sgn=-1.0;

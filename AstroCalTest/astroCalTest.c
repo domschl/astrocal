@@ -29,6 +29,11 @@ int main(int argc, char *argv[]) {
     printf("Julian date: %f\n",jd);
     ASTC_printLocalTime(ts2);
 
+    double msd=ASTC_JDToMSD(jd);
+    printf("Mars Sol Date: %f\n", msd);
+    double jd2=ASTC_MSDToJD(msd);
+    printf("Back to JD: %f\n", jd2);
+    
     testDegree(15.5);
     testDegree(-8.15278);
     testDegree(0.01667);
