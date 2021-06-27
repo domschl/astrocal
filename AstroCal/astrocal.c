@@ -4,45 +4,58 @@
  */
 #include "astrocal.h"
 
+// ------- Time & date ------------------------------------------
+
+/*! Provide current time in UTC as struct timespec 
+
+  The timespec ts contains a long value for seconds ts.tv_sec and 
+  a long value for nanoseconds ts.tv_nsec.
+
+ @return \ref timespec
+*/
 struct timespec ASTC_currentTimeUTC() {
-    /*! Provide current time in UTC as \ref struct timespec 
-
-      The timespec ts contains a long value for seconds ts.tv_sec and 
-      a long value for nanoseconds ts.tv_nsec.
-
-     @return \ref timespec */
     struct timespec ts;
     timespec_get(&ts, TIME_UTC);
     return ts;
 }
 
+/*! Print a timespec to console as UTC time
+  @param ts \ref timespec
+*/
 void ASTC_printTime(const struct timespec ts) {
-    /*! Print a timespec to console as UTC time
-      @param ts \ref timespec
-    */
     char buf[100];
     strftime(buf, sizeof(buf), "%Y-%m-%d %T", gmtime(&ts.tv_sec));
     printf("Current time: %s.%09ld UTC\n", buf, ts.tv_nsec);
 }
 
+/*! Print a timespec to console as local time
+    @param ts \ref timespec
+*/
 void ASTC_printLocalTime(const struct timespec ts) {
-    /*! Print a timespec to console as local time
-      @param ts \ref timespec
-    */
     char buf[100];
     strftime(buf, sizeof(buf), "%Y-%m-%d %T", localtime(&ts.tv_sec));
     printf("Current time: %s.%09ld (local)\n", buf, ts.tv_nsec);
 }
 
+/*! Convert a struct timespec into a double float
+  See also \ref ASTC_doubleToTimespec
+  @param ts \ref timespec
+  @return double float value in seconds
+ */
 double ASTC_timespecToDouble(const struct timespec ts) {
     double dts=(double)ts.tv_sec+(double)ts.tv_nsec/1000000000.0;
     return dts;
 }
 
-struct timespec ASTC_doubleToTimespec(double dts) {
+/*! Convert double time (sec) to timespec
+  See also \ref ASTC_timespecToDouble
+  @param dt Unix time in seconds (double)
+  @return struct \ref timespec
+*/
+struct timespec ASTC_doubleToTimespec(double dt) {
     struct timespec ts;
-    ts.tv_sec=(long)dts;
-    ts.tv_nsec=(long)((dts-(double)ts.tv_sec)*1000000000.0);
+    ts.tv_sec=(long)dt;
+    ts.tv_nsec=(long)((dt-(double)ts.tv_sec)*1000000000.0);
     return ts;
 }
 
@@ -112,6 +125,8 @@ double ASTC_MSDToJD(double msd) {
     return ASTC_MSDToJDprec(msd, 0.00014);
 }
 
+// ------- Degrees & decimals (angles, time hms)  ---------------
+
 double ASTC_degreeToDecimal(int d, int m, double s) {
     double sgn=1.0;
     if (d<0 || m<0 || s<0.0) sgn=-1.0;
@@ -156,6 +171,8 @@ void ASTC_decimalToDegree(double de, int *d, int *m, double *s) {
         }
     }           
 }
+
+// ------- Coordinate systems (cartesian, spherical) ------------
 
 const double π = 3.14159265358979323846;
 

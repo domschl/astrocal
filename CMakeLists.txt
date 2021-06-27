@@ -2,6 +2,7 @@
 # refer to the root source directory of the project as ${HELLO_SOURCE_DIR} and
 # to the root binary directory of the project as ${HELLO_BINARY_DIR}.
 cmake_minimum_required (VERSION 3.1.0)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project (AstroCalHome)
 

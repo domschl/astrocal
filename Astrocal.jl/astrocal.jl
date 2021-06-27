@@ -30,5 +30,6 @@ t1=currentTime()
 printTime(t1)
 
 println(degreeToDecimal(15,30,0.0))
-println(decimalToDegree(15.5))
+println("test")
+println(decimalToDegree(15.5e0))
 
