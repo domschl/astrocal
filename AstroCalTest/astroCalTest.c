@@ -57,10 +57,55 @@ int testDegreeDec() {
     return err;
 }
 
+int epsEqual(double a, double b, double ϵ) {
+    if (fabs(a-b)<ϵ) return 1;
+    else return 0;
+}
+
+int testCR(double x, double y, double z) {
+    double r, ϑ, φ, x1,y1,z1;
+    int err=0;
+    double ϵ=0.000000000001;
+    
+    ASTC_cartesianToSpherical(x,y,z,&r,&ϑ, &φ);
+    printf("x=%f,y=%f,z=%f -> r=%f,ϑ=%f,φ=%f\n",x,y,z,r,ϑ,φ);
+    ASTC_sphericalToCartesian(r, ϑ, φ, &x1, &y1, &z1);
+    if (!epsEqual(x,x1,ϵ)) {
+        ++err;
+        printf("error on x-coord transform: %f!=%f,δ=%f\n",x,x1,x-x1);
+    }
+    if (!epsEqual(y,y1,ϵ)) {
+        ++err;
+        printf("error on y-coord transform: %f!=%f,δ=%f\n",y,y1,y-y1);
+    }
+    if (!epsEqual(z,z1,ϵ)) {
+        ++err;
+        printf("error on x-coord transform: %f!=%f,δ=%f\n",z,z1,z-z1);
+    }
+    return err;
+}
+
+int testCartRad() {
+    int err = 0;
+    printf("--- Cartesian <-> radian tests ---------------\n");
+    err+=testCR(0,0,0);
+    err+=testCR(1,0,0);
+    err+=testCR(0,1,0);
+    err+=testCR(0,0,1);
+    err+=testCR(1,1,0);
+    err+=testCR(0,1,1);
+    err+=testCR(1,0,1);
+    err+=testCR(1,1,1);
+    err+=testCR(3.14,77.0,100.0);
+    err+=testCR(-10,-20,-30);
+    return err;
+}
+
 int main(int argc, char *argv[]) {
     int err=0;
     err += testTime();
     err += testDegreeDec();
+    err += testCartRad();
     printf("--- Result  ----------------------------------\n");
     printf("%d Errors\n",err);
     return err;

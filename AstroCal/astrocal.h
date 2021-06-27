@@ -18,3 +18,12 @@ double ASTC_MSDToJD(double msd);
 
 double ASTC_degreeToDecimal(int d, int m, double s);
 void ASTC_decimalToDegree(double de, int *d, int *m, double *s);
+
+void ASTC_cartesianToSpherical(double x, double y, double z, double *r, double *ϑ, double *φ);
+void ASTC_sphericalToCartesian(double r, double ϑ, double φ, double *x, double *y, double *z);
+void ASTC_C2P(const double x[], double r[]);
+void ASTC_P2C(const double r[], double x[]);
+void ASTC_D2R(double d[], int len);
+void ASTC_R2D(double r[], int len);
+void ASTC_P2D(double p[]);
+void ASTC_D2P(double d[]);
