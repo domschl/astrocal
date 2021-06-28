@@ -79,6 +79,25 @@ struct timespec ASTC_JDToTimespec(double jd) {
     return ASTC_doubleToTimespec(dts);
 }
 
+/*! Convert a Julian date to Modified Julian date
+  MJD=JD-2400000.5
+  see also \ref ASTC_MJDtoJD
+  @param jd Julian date (Time since 1. Jan 4713 mid-day 12:00)
+  @return Modified julian date (Time since 17.11.1858 0:00
+*/
+double ASTC_JDToMJD(double jd) {
+    return jd - 2400000.5;
+}
+
+/*! Convert a Modified Julian data to Julian date
+  see also \ref ASTC_JDToMJD
+  @param Modified julian date (Time since 17.11.1858 0:00  
+  @return jd Julian date (Time since 1. Jan 4713 mid-day 12:00)
+ */
+double ASTC_MJDToJD(double MJD) {
+    return mjd + 2400000.5;
+}
+
 /*! Convert a Julian date to Mars Sol Date (MSD)
   See: https://en.wikipedia.org/wiki/Timekeeping_on_Mars
   See also \ref ASTC_JDToMSD() for a version with default value for k.
