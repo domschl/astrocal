@@ -239,7 +239,7 @@ void ASTC_sphericalToCartesian(double r, double ϑ, double φ, double *x, double
     if (z) *z=r*sin(ϑ);
 }
 
-/*! Convert cartesian vector into spherical coordinates vector
+/*! Convert cartesian vector [x,y,z] into spherical coordinates vector [r,ϑ,φ]
   See also \ref ASTC_cartesianToSpherical (scalar version)
   and \ref ASTC_P2C (inverse)
   Both r and x must be double[3] arrays with 3 elements.
@@ -250,7 +250,7 @@ void ASTC_C2P(const double x[], double r[]) {
     ASTC_cartesianToSpherical(x[0],x[1],x[2],&(r[0]),&(r[1]),&(r[2]));
 }
 
-/*! Convert sperical vector into cartesian coordinates vector
+/*! Convert sperical vector [r,ϑ,φ] into cartesian coordinates vector [x,y,z]
   See also \ref ASTC_sphericalToCartesian (scalar version)
   and \ref ASTC_C2P (inverse)
   Both r and x must be double[3] arrays with 3 elements.
@@ -261,28 +261,52 @@ void ASTC_P2C(const double r[], double x[]) {
     ASTC_sphericalToCartesian(r[0], r[1], r[2], &(x[0]), &(x[1]), &(x[2]));
 }
 
+/*! Convert elements of vector d with len elements from degrees (360deg) to radian (2π)
+  See also \ref ASTC_R2D (inverse) and
+  \ref ASTC_P2D (act on sperical coordinates ϑ,φ of vector [r,ϑ,φ]
+  @param d double vector of lenght len
+  @param len number of elements in vector d
+*/
 void ASTC_D2R(double d[], int len) {
     for (int i=0; i<len; i++) {
         d[i]=d[i]*π/180.0;
     }
 }
 
+/*! Convert elements of vector d with len elements from radian (2π) to degrees (360deg)
+  See also \ref ASTC_D2R (inverse) and
+  \ref ASTC_D2P (act on sperical coordinates ϑ,φ of vector [r,ϑ,φ]
+  @param d double vector of lenght len
+  @param len number of elements in vector d
+ */
 void ASTC_R2D(double r[], int len) {
     for (int i=0; i<len; i++) {
         r[i]=r[i]*180.0/π;
     }
 }
 
-void ASTC_P2D(double p[]) {
-    // p[0]=r, p[1]=ϕ, p[2]=θ
+/*! Convert elements ϑ,φ of spherical coordinates vector d with
+  elements [r,ϑ,φ] from degrees (360deg) to radian (2π)
+  r (element at 0) remains unchanged.
+  See also \ref ASTC_P2D (inverse) and
+  \ref ASTC_D2R (general degree to radian conversions)
+  @param d double vector of lenght 3 containing [r,ϑ,φ]
+*/
+void ASTC_D2P(double d[]) {
     for (int i=1; i<3; i++) {
-        p[i]=p[i]*180.0/π;
+        d[i]=d[i]/180.0*π;
     }
 }
 
-void ASTC_D2P(double d[]) {
-    // d[0]=r, d[1]=ϕ, d[2]=θ
+/*! Convert elements ϑ,φ of spherical coordinates vector d with
+  elements [r,ϑ,φ] from radian to degrees
+  r (element at 0) remains unchanged.
+  See also \ref ASTC_D2P (inverse) and
+  \ref ASTC_R2D (general radian to degree conversions)
+  @param d double vector of lenght 3 containing [r,ϑ,φ]
+*/
+void ASTC_P2D(double p[]) {
     for (int i=1; i<3; i++) {
-        d[i]=d[i]/180.0*π;
+        p[i]=p[i]*180.0/π;
     }
 }
