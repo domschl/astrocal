@@ -59,12 +59,12 @@ struct timespec ASTC_doubleToTimespec(double dt) {
     return ts;
 }
 
+/*! Convert a timespec to Julian date
+  Unix time = (JD − 2440587.5) × 86400
+  @param ts \ref timespec
+  @return julian date as double.
+*/
 double ASTC_timespecToJD(const struct timespec ts) {
-    /*! Convert a timespec to Julian date
-      Unix time = (JD − 2440587.5) × 86400
-      @param ts \ref timespec
-      @return julian date as double.
-    */
     double dts=ASTC_timespecToDouble(ts);
     return dts/86400.0+2440587.5;
 }
@@ -79,54 +79,60 @@ struct timespec ASTC_JDToTimespec(double jd) {
     return ASTC_doubleToTimespec(dts);
 }
 
+/*! Convert a Julian date to Mars Sol Date (MSD)
+  See: https://en.wikipedia.org/wiki/Timekeeping_on_Mars
+  See also \ref ASTC_JDToMSD() for a version with default value for k.
+  @param jd julian date
+  @param k correction factor in MSDs of location of reference crater Airy-0, currently 0.00014d
+  (12sec).
+  @return MSD, Mars Sol Date
+*/
 double ASTC_JDToMSDprec(double jd, double k) {
-    /*! Convert a Julian date to Mars Sol Date (MSD)
-      See: https://en.wikipedia.org/wiki/Timekeeping_on_Mars
-      See also \ref ASTC_JDToMSD() for a version with default value for k.
-      @param jd julian date
-      @param k correction factor in MSDs of location of reference crater Airy-0, currently 0.00014d
-      (12sec).
-      @return MSD, Mars Sol Date
-    */
     double msd=(jd - 2451549.5 + k)/1.02749125 + 44796.0;
     return msd;
 }
 
+/*! Convert a Mars Sol Date (MSD) to Julian date
+  See: https://en.wikipedia.org/wiki/Timekeeping_on_Mars
+  See also \ref ASTC_MSDToJD() for a version with default value for k.
+  @param msd Mars Sol Date (MSD)
+  @param k correction factor in MSDs of location of reference crater Airy-0, currently 0.00014d
+  (12sec).
+  @return JD, Julian date.
+*/
 double ASTC_MSDToJDprec(double msd, double k) {
-    /*! Convert a Mars Sol Date (MSD) to Julian date
-      See: https://en.wikipedia.org/wiki/Timekeeping_on_Mars
-      See also \ref ASTC_MSDToJD() for a version with default value for k.
-      @param msd Mars Sol Date (MSD)
-      @param k correction factor in MSDs of location of reference crater Airy-0, currently 0.00014d
-      (12sec).
-      @return JD, Julian date.
-    */
     double jd=(msd-44796.0)*1.02749125-k+2451549.5;
     return jd;
 }
 
+/*! Convert a Julian date to Mars Sol Date (MSD)
+  See: https://en.wikipedia.org/wiki/Timekeeping_on_Mars
+  See also \ref ASTC_JDToMSDprec().
+  @param jd julian date
+  @return MSD, Mars Sol Date
+*/
 double ASTC_JDToMSD(double jd) {
-    /*! Convert a Julian date to Mars Sol Date (MSD)
-      See: https://en.wikipedia.org/wiki/Timekeeping_on_Mars
-      See also \ref ASTC_JDToMSDprec().
-      @param jd julian date
-      @return MSD, Mars Sol Date
-    */
     return ASTC_JDToMSDprec(jd, 0.00014);
 }
 
+/*! Convert a Mars Sol Date (MSD) to Julian date
+  See: https://en.wikipedia.org/wiki/Timekeeping_on_Mars
+  See also \ref ASTC_MSDToJDprec().
+  @param msd MSD, Mars Sol Date
+  @return julian date
+*/
 double ASTC_MSDToJD(double msd) {
-    /*! Convert a Mars Sol Date (MSD) to Julian date
-      See: https://en.wikipedia.org/wiki/Timekeeping_on_Mars
-      See also \ref ASTC_MSDToJDprec().
-      @param msd MSD, Mars Sol Date
-      @return julian date
-    */
     return ASTC_MSDToJDprec(msd, 0.00014);
 }
 
 // ------- Degrees & decimals (angles, time hms)  ---------------
-
+/*! Convert degree, minutes, seconds into decimal value
+  See also \ref ASTC_decimalToDegree
+  @param d degrees (int)
+  @param m minutes (int)
+  @param s seconds (real)
+  @return decimal equivalent D.dddd
+*/
 double ASTC_degreeToDecimal(int d, int m, double s) {
     double sgn=1.0;
     if (d<0 || m<0 || s<0.0) sgn=-1.0;
@@ -142,6 +148,14 @@ double ASTC_degreeToDecimal(int d, int m, double s) {
     return sgn*(fabs((double)d)+fabs((double)m/60.0)+fabs(s)/3600.0);
 }
 
+
+/*! Convert decimal degree value to degree, minutes, seconds
+  See also \ref ASTC_degreeToDecimal
+  @param de decimal degree D.dddd
+  @param d degrees (int*)
+  @param m minutes (int*)
+  @param s seconds (double*)
+*/
 void ASTC_decimalToDegree(double de, int *d, int *m, double *s) {
     double ade=fabs(de);
     if (d) *d=(int)ade;
@@ -181,36 +195,70 @@ const double π = 3.14159265358979323846;
              |      o P
              |  r / |
              |   /  |
-             | / θ  |
+             | / ϑ  |
              +——————————————————y
             / \     |      .
-          /.ϕ...\   |    .
+          /.φ...\   |    .
         /        \  |  . 
       /............\|.
      x
-     Azimuth   ϕ is angle from x towards y (counter-clockwise) in x-y plane, 
-     Elevation θ is angle from x-y plane towards z-axis
+     Azimuth   φ is angle from x towards y (counter-clockwise) in x-y plane, 
+     Elevation ϑ is angle from x-y plane towards z-axis
      Radius    r is distance from P to origin.
  */
 
+/*! Convert cartesian into spherical coordinates
+  See also \ref ASTC_sphericalToCartesian (inverse)
+  and \ref ASTC_C2P (vector version)
+  @param x x-coordinate
+  @param y y-coordinate
+  @param z z-coordinate
+  @param r pointer to radius, calculated
+  @param ϑ pointer to elevation, angle on x-y plane towards z-axis
+  @param φ pointer to azimuth, angle from x towards y (counter-clockwise in x-y plane
+ */
 void ASTC_cartesianToSpherical(double x, double y, double z, double *r, double *ϑ, double *φ) {
     if (r) *r=sqrt(x*x+y*y+z*z);
     if (ϑ) *ϑ=atan2(z,sqrt(x*x+y*y));
     if (φ) *φ=atan2(y,x);
 }
 
+/*! Convert sperical into cartesian coordinates
+  See also \ref ASTC_cartesianToSpherical (inverse)
+  and \ref AST_P2C (vector version)
+  @param r radius
+  @param ϑ elevation, angle on x-y plane towards z-axis
+  @param φ azimuth, angle from x towards y (counter-clockwise in x-y plane)
+  @param x pointer to x-coordinate, calculated
+  @param y pointer to y-coordinate
+  @param z pointer to z-coordinate
+ */
 void ASTC_sphericalToCartesian(double r, double ϑ, double φ, double *x, double *y, double *z) {
     if (x) *x=r*cos(ϑ)*cos(φ);
     if (y) *y=r*cos(ϑ)*sin(φ);
     if (z) *z=r*sin(ϑ);
-    }
+}
 
+/*! Convert cartesian vector into spherical coordinates vector
+  See also \ref ASTC_cartesianToSpherical (scalar version)
+  and \ref ASTC_P2C (inverse)
+  Both r and x must be double[3] arrays with 3 elements.
+  @param x IN x[0]: x, x[1]: y, x[2]: z-coordinate
+  @param r OUT r[0]: radius, r[1]: ϑ elevation, angle on x-y plane towards z-axis, r[2]: φ azimuth, angle from x towards y (counter-clockwise in x-y plane)
+ */
 void ASTC_C2P(const double x[], double r[]) {
     ASTC_cartesianToSpherical(x[0],x[1],x[2],&(r[0]),&(r[1]),&(r[2]));
 }
 
+/*! Convert sperical vector into cartesian coordinates vector
+  See also \ref ASTC_sphericalToCartesian (scalar version)
+  and \ref ASTC_C2P (inverse)
+  Both r and x must be double[3] arrays with 3 elements.
+  @param r IN r[0]: radius, r[1]: ϑ elevation, angle on x-y plane towards z-axis, r[2]: φ azimuth, angle from x towards y (counter-clockwise in x-y plane)
+  @param x OUT x[0]: x, x[1]: y, x[2]: z-coordinate
+ */
 void ASTC_P2C(const double r[], double x[]) {
-    ASTC_cartesianToSpherical(r[0], r[1], r[2], &(x[0]), &(x[1]), &(x[2]));
+    ASTC_sphericalToCartesian(r[0], r[1], r[2], &(x[0]), &(x[1]), &(x[2]));
 }
 
 void ASTC_D2R(double d[], int len) {

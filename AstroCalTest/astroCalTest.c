@@ -64,6 +64,7 @@ int epsEqual(double a, double b, double ϵ) {
 
 int testCR(double x, double y, double z) {
     double r, ϑ, φ, x1,y1,z1;
+    double xv[3], rv[3], xv1[3];
     int err=0;
     double ϵ=0.000000000001;
     
@@ -81,6 +82,16 @@ int testCR(double x, double y, double z) {
     if (!epsEqual(z,z1,ϵ)) {
         ++err;
         printf("error on x-coord transform: %f!=%f,δ=%f\n",z,z1,z-z1);
+    }
+    xv[0]=x; xv[1]=y; xv[2]=z;
+    ASTC_C2P(xv,rv);
+    ASTC_P2C(rv,xv1);
+    for (int i=0; i<3; i++) {
+        if (!epsEqual(xv[i], xv1[i], ϵ)) {
+            ++err;
+            printf("error on x[%d]-coord transform: %f!=%f, δ=%f\n", i, xv[i], xv1[i],
+                   xv[i] - xv1[i]);
+        }
     }
     return err;
 }
