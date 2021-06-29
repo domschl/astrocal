@@ -22,6 +22,13 @@ int testTime() {
     struct timespec ts2=ASTC_JDToTimespec(jd);
     printf("Julian date: %f\n",jd);
     ASTC_printLocalTime(ts2);
+    double mjd=ASTC_JDToMJD(jd);
+    printf("Modified Julian date: %f\n",mjd);
+    double jd3=ASTC_MJDToJD(mjd);
+    if (jd3 != jd) {
+        ++err;
+        printf("MJD/JD conversion broken, %f!=%f, ̣δ=%f\n", jd, jd3, jd - jd3);
+    }
 
     double msd=ASTC_JDToMSD(jd);
     printf("Mars Sol Date: %f\n", msd);
