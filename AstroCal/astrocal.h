@@ -279,7 +279,7 @@ void ASTC_P2C(const double r[], double x[]) {
     ASTC_sphericalToCartesian(r[0], r[1], r[2], &(x[0]), &(x[1]), &(x[2]));
 }
 
-/*! Convert elements of vector d with len elements from degrees (360deg) to radian (2π)
+/*! Convert elements of vector d with len elements from degrees (360deg) to radians (2π)
   See also \ref ASTC_R2D (inverse) and
   \ref ASTC_P2D (act on sperical coordinates ϑ,φ of vector [r,ϑ,φ]
   @param d double vector of lenght len
@@ -291,7 +291,7 @@ void ASTC_D2R(double d[], int len) {
     }
 }
 
-/*! Convert elements of vector d with len elements from radian (2π) to degrees (360deg)
+/*! Convert elements of vector d with len elements from radians (2π) to degrees (360deg)
   See also \ref ASTC_D2R (inverse) and
   \ref ASTC_D2P (act on sperical coordinates ϑ,φ of vector [r,ϑ,φ]
   @param d double vector of lenght len
@@ -320,7 +320,7 @@ void ASTC_D2P(double d[]) {
   elements [r,ϑ,φ] from radian to degrees
   r (element at 0) remains unchanged.
   See also \ref ASTC_D2P (inverse) and
-  \ref ASTC_R2D (general radian to degree conversions)
+  \ref ASTC_R2D (general radians to degree conversions)
   @param d double vector of lenght 3 containing [r,ϑ,φ]
 */
 void ASTC_P2D(double p[]) {
