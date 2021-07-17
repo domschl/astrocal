@@ -5,4 +5,4 @@ compile_commands.json
 *~
 # it's not standard practice to put cargo.lock into gitignore for bins
 cargo.lock
-
+astrocal_rs/target/
