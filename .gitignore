@@ -3,4 +3,6 @@ build/
 compile_commands.json
 .ccls-cache/
 *~
+# it's not standard practice to put cargo.lock into gitignore for bins
+cargo.lock
 
