@@ -1,8 +1,11 @@
+
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(CARGO_CMD cargo build)
+    set(ENV{RUSTFLAGS} "-L ~/git/CScratch/astrocal/build/AstroCal")
+    set(CARGO_CMD cargo build --verbose)
     set(TARGET_DIR "debug")
 else ()
-    set(CARGO_CMD cargo build --release)
+    set(ENV{RUSTFLAGS} "-L /Users/dsc/git/CScratch/astrocal/build/AstroCal")
+    set(CARGO_CMD cargo build --release --verbose)
     set(TARGET_DIR "release")
 endif ()
 
@@ -10,6 +13,7 @@ set(ASTROCAL_RS "${CMAKE_CURRENT_BINARY_DIR}/${TARGET_DIR}/astrocal_rs")
 
 add_custom_target(astrocal_rs ALL
     COMMENT "Compiling astrocal_rs"
+    COMMAND cp -v "${CMAKE_CURRENT_BINARY_DIR}/../AstroCal/libAstroCal*" "${CMAKE_CURRENT_BINARY_DIR}/release/deps"
     COMMAND CARGO_TARGET_DIR=${CMAKE_CURRENT_BINARY_DIR} ${CARGO_CMD} 
     COMMAND cp ${ASTROCAL_RS} ${CMAKE_CURRENT_BINARY_DIR}
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
