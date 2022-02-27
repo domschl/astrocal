@@ -27,7 +27,7 @@ int testTime() {
     double jd3=ASTC_MJDToJD(mjd);
     if (jd3 != jd) {
         ++err;
-        printf("MJD/JD conversion broken, %f!=%f, ̣δ=%f\n", jd, jd3, jd - jd3);
+        printf("MJD/JD conversion broken, %f!=%f, ̣Δ=%e\n", jd, jd3, jd - jd3);
     }
 
     double msd=ASTC_JDToMSD(jd);
@@ -80,15 +80,15 @@ int testCR(double x, double y, double z) {
     ASTC_sphericalToCartesian(r, ϑ, φ, &x1, &y1, &z1);
     if (!epsEqual(x,x1,ϵ)) {
         ++err;
-        printf("error on x-coord transform: %f!=%f,δ=%f\n",x,x1,x-x1);
+        printf("error on x-coord transform: %f!=%f, Δ=%e\n",x,x1,x-x1);
     }
     if (!epsEqual(y,y1,ϵ)) {
         ++err;
-        printf("error on y-coord transform: %f!=%f,δ=%f\n",y,y1,y-y1);
+        printf("error on y-coord transform: %f!=%f, Δ=%e\n",y,y1,y-y1);
     }
     if (!epsEqual(z,z1,ϵ)) {
         ++err;
-        printf("error on x-coord transform: %f!=%f,δ=%f\n",z,z1,z-z1);
+        printf("error on x-coord transform: %f!=%f, Δ=%e\n",z,z1,z-z1);
     }
     xv[0]=x; xv[1]=y; xv[2]=z;
     ASTC_C2P(xv,rv);
@@ -98,7 +98,7 @@ int testCR(double x, double y, double z) {
         rv1[i]=rv[i];
         if (!epsEqual(xv[i], xv1[i], ϵ)) {
             ++err;
-            printf("error on x[%d]-coord transform: %f!=%f, δ=%f\n", i, xv[i], xv1[i],
+            printf("error on x[%d]-coord transform: %f!=%f, Δ=%e\n", i, xv[i], xv1[i],
                    xv[i] - xv1[i]);
         }
     }
@@ -107,7 +107,7 @@ int testCR(double x, double y, double z) {
     for (int i=0; i<3; i++) {
         if (!epsEqual(rv[i], rv1[i],ϵ)) {
             ++err;
-            printf("radian <-> degree conversion failed for dim %d, %f!=%f, ̣δ=%f\n", i, rv[i],
+            printf("radian <-> degree conversion failed for dim %d, %f!=%f, ̣Δ=%e\n", i, rv[i],
                    rv1[i], rv[i] - rv1[i]);
         }
     }
@@ -130,11 +130,36 @@ int testCartRad() {
     return err;
 }
 
+int testLatLonDist() {
+    int err = 0;
+    printf("--- Lat/Lon <-> distance tests ---------------\n");
+    double lat1,lon1,lat2,lon2,d,r;
+    double ϵ=1e-14;
+    lat1=0; lon1=0; lat2=0; lon2=0; r=1;
+    d=ASTC_latLonDistance(lat1,lon1,lat2,lon2, r);
+    if (!epsEqual(d, 0, ϵ)) {
+        ++err;
+        printf("Lat/Lon dist at 0,0,0,0 should be 0, got %f, Δ=%e\n",d,fabs(d-0.0));
+    } else {
+        printf("Lat/Lon dist at 0,0,0,0 should be 0, got %f, OK\n",d);
+    }
+    lat1=0; lon1=0; lat2=0; lon2=1;
+    d=ASTC_latLonDistance(lat1,lon1,lat2,lon2, r);
+    if (!epsEqual(d, 1.0, ϵ)) {
+        ++err;
+        printf("Lat/Lon dist at 0,0,0,1 should be 1, got %f, Δ=%e\n", d, fabs(d-1.0));
+    } else {
+        printf("Lat/Lon dist at 0,0,0,1 should be 1, got %f, OK\n",d);
+    }
+    return err;
+}
+
 int main(int argc, char *argv[]) {
     int err=0;
     err += testTime();
     err += testDegreeDec();
     err += testCartRad();
+    err += testLatLonDist();
     printf("--- Result  ----------------------------------\n");
     printf("%d Errors\n",err);
     return err;

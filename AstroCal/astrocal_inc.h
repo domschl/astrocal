@@ -22,3 +22,8 @@ void ASTC_D2R(double d[], int len);
 void ASTC_R2D(double r[], int len);
 void ASTC_P2D(double p[]);
 void ASTC_D2P(double d[]);
+
+double ASTC_latLonDistance(double lat1, double lon1, double lat2, double lon2, double r);
+double ASTC_latLonDistanceEarth(double lat1, double lon1, double lat2, double lon2);
+double ASTC_latLonDistanceEarthDeg(double lat1, double lon1, double lat2, double lon2);
+

@@ -8,3 +8,4 @@ cargo.lock
 astrocal_rs/target/
 .cache
 doc/
+\#*
