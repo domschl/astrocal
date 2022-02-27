@@ -330,6 +330,7 @@ void ASTC_P2D(double p[]) {
 }
 
 /*! Calculate distance between two lat/lon (radians) locations on a sphere with radius r
+ * 
  * @param lat1 latitude of first location (all radians)
  * @param lon1 longitude of first location
  * @param lat2 latitude of second location
@@ -344,6 +345,11 @@ double ASTC_latLonDistance(double lat1, double lon1, double lat2, double lon2, d
 }
 
 /* Calculate distance between two lat/lon (radians) locations on earth
+ *
+ * @Note: earth is not a perfect sphere, so the results are approximate.
+ *
+ * See also \ref ASTC_latLonDistance (calculate distance between two lat/lon locations on a sphere with radius r),
+ * \ref ASTC_latLonDistanceEarthDeg (calculate distance between two lat/lon (in degrees) locations on earth with radius 6371km)
  * @param lat1 latitude of first location (all radians)
  * @param lon1 longitude of first location
  * @param lat2 latitude of second location
@@ -356,6 +362,12 @@ double ASTC_latLonDistanceEarth(double lat1, double lon1, double lat2, double lo
 }
 
 /* Calculate distance between two lat/lon (degrees) locations on earth
+ *
+ * @Note: earth is not a perfect sphere, so the results are approximate.
+ *
+ * See also \ref ASTC_latLonDistance (calculate distance between two lat/lon locations on a sphere with radius r),
+ * \ref ASTC_latLonDistanceEarth (calculate distance between two lat/lon (in radians) locations on earth with radius 6371km)
+ *
  * @param lat1 latitude of first location (all degrees, decimal)
  * @param lon1 longitude of first location
  * @param lat2 latitude of second location
