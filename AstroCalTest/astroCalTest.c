@@ -130,27 +130,27 @@ int testCartRad() {
     return err;
 }
 
+int latLonDistTest(double lat1, double lon1, double lat2, double lon2, double r, double d, double ϵ) {
+    double dc=ASTC_latLonDistance(lat1,lon1,lat2,lon2,r);
+    if (!epsEqual(d,dc,ϵ)) {
+        printf("Error on latLonDistance: %f!=%f, Δ=%e\n",d,dc,fabs(d-dc));
+        return 1;
+    } else {
+        printf("Result on latLonDistance: %f=%f, Δ=%e OK\n",d,dc,fabs(d-dc));
+    }
+    return 0;
+}
+
 int testLatLonDist() {
     int err = 0;
     printf("--- Lat/Lon <-> distance tests ---------------\n");
     double lat1,lon1,lat2,lon2,d,r;
     double ϵ=1e-14;
-    lat1=0; lon1=0; lat2=0; lon2=0; r=1;
-    d=ASTC_latLonDistance(lat1,lon1,lat2,lon2, r);
-    if (!epsEqual(d, 0, ϵ)) {
-        ++err;
-        printf("Lat/Lon dist at 0,0,0,0 should be 0, got %f, Δ=%e\n",d,fabs(d-0.0));
-    } else {
-        printf("Lat/Lon dist at 0,0,0,0 should be 0, got %f, OK\n",d);
-    }
-    lat1=0; lon1=0; lat2=0; lon2=1;
-    d=ASTC_latLonDistance(lat1,lon1,lat2,lon2, r);
-    if (!epsEqual(d, 1.0, ϵ)) {
-        ++err;
-        printf("Lat/Lon dist at 0,0,0,1 should be 1, got %f, Δ=%e\n", d, fabs(d-1.0));
-    } else {
-        printf("Lat/Lon dist at 0,0,0,1 should be 1, got %f, OK\n",d);
-    }
+    err += latLonDistTest(0,0,0,0,1,0,ϵ);
+    err += latLonDistTest(0,0,0,1,1,1,ϵ);
+    double earthRadius=6378.137;
+    double earthCircumference=2*π*earthRadius;
+    err += latLonDistTest(0,0,0,3.14159265,earthRadius,earthCircumference/2,0.00001);
     return err;
 }
 
