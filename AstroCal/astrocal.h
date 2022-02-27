@@ -328,3 +328,42 @@ void ASTC_P2D(double p[]) {
         p[i]=p[i]*180.0/π;
     }
 }
+
+/*! Calculate distance between two lat/lon (radians) locations on a sphere with radius r
+ * @param lat1 latitude of first location (all radians)
+ * @param lon1 longitude of first location
+ * @param lat2 latitude of second location
+ * @param lon2 longitude of second location
+ * @param r radius of sphere in meters
+ * @return distance in meters
+ */
+double ASTC_LatLonDistance(double lat1, double lon1, double lat2, double lon2, double r) {
+    // d = acos( sin φ1 ⋅ sin φ2 + cos φ1 ⋅ cos φ2 ⋅ cos Δλ ) ⋅ R  // https://www.movable-type.co.uk/scripts/latlong.html
+    double d=acos(sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon2-lon1))*r;
+    return d;
+}
+
+/* Calculate distance between two lat/lon (radians) locations on earth
+ * @param lat1 latitude of first location (all radians)
+ * @param lon1 longitude of first location
+ * @param lat2 latitude of second location
+ * @param lon2 longitude of second location
+ * @return distance in meters
+ */
+double ASTC_LatLonDistanceEarth(double lat1, double lon1, double lat2, double lon2) {
+    double r=6371000.0; // earth radius in meters
+    return ASTC_LatLonDistance(lat1,lon1,lat2,lon2,r);
+}
+
+/* Calculate distance between two lat/lon (degrees) locations on earth
+ * @param lat1 latitude of first location (all degrees, decimal)
+ * @param lon1 longitude of first location
+ * @param lat2 latitude of second location
+ * @param lon2 longitude of second location
+ * @return distance in meters
+ */
+double ASTC_LatLonDistanceEarthDeg(double lat1, double lon1, double lat2, double lon2) {
+    double r=6371000.0; // earth radius in meters
+    return ASTC_LatLonDistance(lat1*π/180.0,lon1*π/180.0,lat2*π/180.0,lon2*π/180.0,r);
+}
+
