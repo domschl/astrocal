@@ -10,6 +10,5 @@ endif()
 add_subdirectory (AstroCal)
 add_subdirectory (AstroCalTest)
 add_subdirectory (Astrocal.jl)
-# add_subdirectory (astrocal_rs)
 
 set_property(TARGET AstroCal PROPERTY C_STANDARD 11)
